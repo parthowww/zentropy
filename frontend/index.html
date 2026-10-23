@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseOps — Minimalist Observability</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-grid">
+
+  <div class="app-shell">
+
+    <!-- Floating Island 1: Navigation Sidebar -->
+    <aside class="sidebar-island">
+      <div class="brand-header">
+        <h1 class="brand-title">
+          <span class="brand-pulse-dot"></span>
+          PulseOps
+        </h1>
+        <p class="brand-subtitle">High-Signal Microservice Telemetry</p>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-link active" data-tab="overview">
+          <i data-lucide="layout-dashboard"></i>
+          Overview
+        </button>
+        <button class="nav-link" data-tab="services">
+          <i data-lucide="server"></i>
+          Services
+        </button>
+        <button class="nav-link" data-tab="incidents">
+          <i data-lucide="alert-circle"></i>
+          Incidents
+        </button>
+        <button class="nav-link" data-tab="telemetry">
+          <i data-lucide="activity"></i>
+          Latency Stream
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div id="system-status-pill" class="status-badge status-operational">
+          <span style="width: 6px; height: 6px; background: currentColor; border-radius: 50%;"></span>
+          <span>All Systems Go</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Floating Island 2: Main Canvas -->
+    <main class="main-island">
+
+      <!-- View: Overview / Services -->
+      <section id="view-container">
+
+        <!-- Top Header -->
+        <header class="view-header">
+          <div>
+            <h2 id="page-title" class="view-title">Service Reliability Overview</h2>
+            <p id="page-desc" class="view-desc">Live status, p99 latencies, and uptime across production infrastructure.</p>
+          </div>
+          <div class="table-actions">
+            <button id="toggle-add-btn" class="btn-primary">
+              <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+              Add Endpoint
+            </button>
+          </div>
+        </header>
+
+        <!-- Inline Drawer for Adding Service (Zero Popups) -->
+        <div id="add-service-drawer" class="inline-drawer" style="border-radius: 20px; margin-top: 1.25rem;">
+          <form id="add-service-form" class="inline-form">
+            <div class="form-group">
+              <label>Service Name</label>
+              <input type="text" id="svc-name" class="form-control" placeholder="e.g. Identity OAuth Provider" required>
+            </div>
+            <div class="form-group">
+              <label>Health Endpoint URL</label>
+              <input type="text" id="svc-url" class="form-control" placeholder="https://api.domain.com/health" required>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="svc-category" class="form-control">
+                <option value="api">API Service</option>
+                <option value="database">Database</option>
+                <option value="auth">Auth & Session</option>
+                <option value="gateway">Ingress Gateway</option>
+                <option value="worker">Async Worker</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="submit" class="btn-primary">Save Endpoint</button>
+              <button type="button" id="cancel-add-btn" class="btn-quiet">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="metrics-grid" style="margin-top: 1.5rem;">
+          <div class="section-card">
+            <div class="metric-label">
+              <span>ACTIVE SERVICES</span>
+              <i data-lucide="cpu" style="width: 16px; height: 16px;"></i>
+            </div>
+            <div id="metric-services-count" class="metric-value">0</div>
+            <div class="metric-sub">Monitored 24/7</div>
+          </div>
+
+          <div class="section-card">
+            <div class="metric-label">
+              <span>AVG LATENCY</span>
+              <i data-lucide="zap" style="width: 16px; height: 16px;"></i>
+            </div>
+            <div id="metric-latency" class="metric-value">-- ms</div>
+            <div class="metric-sub">Rolling 1h window</div>
+          </div>
+
+          <div class="section-card">
+            <div class="metric-label">
+              <span>GLOBAL UPTIME</span>
+              <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+            </div>
+            <div id="metric-uptime" class="metric-value">-- %</div>
+            <div class="metric-sub">SLA Target 99.9%</div>
+          </div>
+
+          <div class="section-card">
+            <div class="metric-label">
+              <span>ACTIVE INCIDENTS</span>
+              <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+            </div>
+            <div id="metric-incidents" class="metric-value">0</div>
+            <div class="metric-sub">0 critical</div>
+          </div>
+        </div>
+
+        <!-- Services Section Table -->
+        <div class="table-card" style="margin-top: 1.5rem;">
+          <div class="table-header-bar">
+            <span class="table-title">Monitored Endpoints</span>
+            <span id="service-count-pill" class="pill-status pill-healthy">Live Sync Active</span>
+          </div>
+          
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>Service Name</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Latency</th>
+                <th>Uptime</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="services-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading telemetry data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Incidents Feed -->
+        <div class="table-card" style="margin-top: 1.5rem;">
+          <div class="table-header-bar">
+            <span class="table-title">Recent Incidents & Events</span>
+            <span class="btn-quiet" style="cursor: default; font-size: 0.75rem;">Audit Trail</span>
+          </div>
+          <div id="incidents-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

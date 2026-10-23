@@ -1,0 +1,17 @@
+{
+  "name": "pulse-ops-backend",
+  "version": "1.0.0",
+  "description": "Minimalist Zero-Noise Observability & Microservice Health Orchestrator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node database/seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "keywords": ["observability", "microservices", "uptime", "minimalist", "dashboard"],
+  "author": "Parthasarathi Adhikary",
+  "license": "MIT"
+}
