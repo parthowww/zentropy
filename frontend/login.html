@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Zentropy Telemetry Console</title>
+  <link rel="stylesheet" href="css/landing.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .auth-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--border-card);
+      border-radius: 24px;
+      padding: 2.75rem 2.25rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-input {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary-accent);
+    }
+
+    .demo-callout {
+      background: rgba(0, 242, 254, 0.06);
+      border: 1px dashed rgba(0, 242, 254, 0.3);
+      border-radius: 14px;
+      padding: 1rem;
+      margin-bottom: 1.75rem;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <a href="/" class="brand-badge" style="justify-content: center; margin-bottom: 0.75rem;">
+          <span class="brand-pulse"></span>
+          Zentropy
+        </a>
+        <h2 style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em;">Welcome Back</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Sign in to access your telemetry workspace</p>
+      </div>
+
+      <!-- Quick 1-Click Demo Access for pitches/investors/clients -->
+      <div class="demo-callout">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span style="font-size: 0.75rem; font-weight: 700; color: var(--primary-accent); letter-spacing: 0.05em;">INVESTOR & CLIENT DEMO</span>
+          <span style="font-size: 0.7rem; color: #10B981; font-weight: 600;">PRE-CONFIGURED</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          Want to test immediately without typing? Click below to load the live workspace.
+        </p>
+        <button id="btn-quick-demo" class="btn-glow" style="width: 100%; justify-content: center; padding: 0.65rem;">
+          <i data-lucide="play-circle" style="width: 16px; height: 16px;"></i>
+          Instant 1-Click Demo Login
+        </button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <hr style="flex: 1; border: none; border-top: 1px solid var(--border-card);">
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">OR SIGN IN WITH EMAIL</span>
+        <hr style="flex: 1; border: none; border-top: 1px solid var(--border-card);">
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Work Email</label>
+          <input type="email" id="email" class="form-input" value="demo@zentropy.io" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="password" class="form-input" value="demo123" required>
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn-subtle" style="width: 100%; padding: 0.85rem; justify-content: center; font-size: 0.95rem; margin-top: 0.5rem;">
+          Sign In to Workspace
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.75rem;">
+        <a href="/" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;">
+          ← Back to Overview
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Quick demo login
+    document.getElementById('btn-quick-demo').addEventListener('click', async () => {
+      try {
+        const res = await fetch('/api/auth/demo', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('zentropy_token', data.token);
+          localStorage.setItem('zentropy_user', JSON.stringify(data.user));
+          window.location.href = '/app';
+        }
+      } catch (err) {
+        alert('Login failed: ' + err.message);
+      }
+    });
+
+    // Manual form submit
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('zentropy_token', data.token);
+          localStorage.setItem('zentropy_user', JSON.stringify(data.user));
+          window.location.href = '/app';
+        } else {
+          alert(data.message || 'Invalid credentials');
+        }
+      } catch (err) {
+        alert('Network error during login');
+      }
+    });
+  </script>
+</body>
+</html>
