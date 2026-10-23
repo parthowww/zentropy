@@ -1,7 +1,7 @@
 {
-  "name": "pulse-ops-backend",
+  "name": "zentropy",
   "version": "1.0.0",
-  "description": "Minimalist Zero-Noise Observability & Microservice Health Orchestrator",
+  "description": "Zentropy — Zero-Entropy Microservice Telemetry & System Order Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,7 +11,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.2"
   },
-  "keywords": ["observability", "microservices", "uptime", "minimalist", "dashboard"],
+  "keywords": ["zentropy", "observability", "microservices", "uptime", "zero-entropy", "minimalist"],
   "author": "Parthasarathi Adhikary",
   "license": "MIT"
 }

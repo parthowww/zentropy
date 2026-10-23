@@ -8,7 +8,7 @@ function seedDatabase() {
     return;
   }
 
-  console.log('Seeding PulseOps database...');
+  console.log('Seeding Vigilator database...');
 
   const insertService = db.prepare(`
     INSERT INTO services (name, url, environment, category, status, latency_ms, uptime_pct, last_checked)

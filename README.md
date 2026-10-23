@@ -1,30 +1,30 @@
-# PulseOps ⚡
+# Zentropy 🌀
 
-> **Minimalist Zero-Noise Microservice Telemetry & Reliability Orchestrator**
+> **Zero-Entropy Microservice Telemetry & System Order Platform**
 
-PulseOps is an AI-friendly, high-signal service reliability dashboard designed with the clean, elevated aesthetic of Xenodochy: floating frosted-glass card containers, subtle radial dot grids, and zero clutter or intrusive modals.
+Zentropy is a minimalist observability platform designed to eliminate operational chaos and system degradation. Inspired by the clean, elevated aesthetic of Xenodochy, Zentropy replaces cluttered monitoring suites with floating frosted-glass islands, subtle radial dot grids, and zero intrusive popup dialogs.
 
 ---
 
 ## ✨ Features
 
-- **Xenodochy Design Language:** Off-white background (`#F8F9FA`), subtle radial matrix dot grid, floating frosted glass islands (`rounded-[32px]`), and crisp typography.
-- **Zero-Modal Workflow:** All actions (adding endpoints, verifying pings, resolving incident trails) happen in-place via smooth inline drawers.
-- **Microservice Health & Latency:** Real-time tracking of p99 latency, global uptime percentages, and status alerts.
-- **Embedded Database:** Built-in SQLite database using Node's native `node:sqlite` for zero native build dependencies.
-- **RESTful API:** Structured endpoints for services, incident tracking, and metric aggregates.
+- **Xenodochy Aesthetic:** Off-white canvas (`#F8F9FA`), subtle radial matrix dot grid, floating rounded frosted islands (`rounded-[32px]`), and crisp Bricolage Grotesque typography.
+- **Zero-Modal Workflow:** All telemetry interactions (adding endpoints, verifying latency pings, resolving incident trails) happen in-place via smooth inline drawers.
+- **Microservice Health & Latency:** Real-time tracking of p99 latency, global uptime equilibrium, and degraded state triggers.
+- **Embedded Database:** Zero-configuration SQLite database powered by Node's native `node:sqlite`.
+- **RESTful API:** Clean, structured endpoints for services, incident tracking, and metric aggregates.
 
 ---
 
 ## 🏗️ Architecture
 
 ```
-pulse-ops/
+zentropy/
 ├── backend/
 │   ├── database/
 │   │   ├── schema.sql      # SQLite relational table schemas
 │   │   ├── db.js           # Database connection using node:sqlite
-│   │   └── seed.js         # Initial mock telemetry seed script
+│   │   └── seed.js         # Telemetry seed script
 │   ├── routes/
 │   │   ├── services.js     # Endpoint CRUD & health check simulation
 │   │   ├── incidents.js    # Incident lifecycle operations
@@ -70,7 +70,7 @@ The server will seed the database automatically and launch on:
 | `GET` | `/api/incidents` | Retrieve incident log history |
 | `PATCH` | `/api/incidents/:id/resolve` | Mark an incident as resolved |
 | `GET` | `/api/metrics/overview` | Fetch global telemetry KPIs |
-| `GET` | `/api/health` | Health check for PulseOps Core |
+| `GET` | `/api/health` | Health check for Zentropy Core |
 
 ---
 
